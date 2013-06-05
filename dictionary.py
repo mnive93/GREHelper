@@ -1,16 +1,18 @@
 import MySQLdb
-from pattern.en import wordnet
+from nltk.corpus import wordnet
 db = MySQLdb.connect("localhost","root","nive","gre" )
 cursor = db.cursor()
 while(True) :
  s1 = raw_input("Enter a word and see the magic")
- s = wordnet.synsets(s1)[0]
- print 'Definition:', s.gloss
- print '  Synonyms:', s.synonyms
- print ' Similar:',   s.similar()    
- print '  Hyponyms:', s.hyponyms()
- print '  Holonyms:', s.holonyms()
- print '  Meronyms:', s.meronyms()
+ synsets = wordnet.synsets( s1 )
+ for synset in synsets:
+  print "-" * 10
+  print "Name:", synset.name
+  print "Lexical Type:", synset.lexname
+  print "Lemmas:", synset.lemma_names
+  print "Definition:", synset.definition
+  for example in synset.examples:
+    print "Example:", example
  if cursor.execute("select count from learnt where learnt_word= %s ",(s1)) :
     result=cursor.fetchone()
     print  "You have viewed this word : %s" % result
